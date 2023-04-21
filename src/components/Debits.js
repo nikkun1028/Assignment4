@@ -25,16 +25,59 @@ const Debits = (props) => {
 
 
 class Debits extends Component {
+
+    constructor () {
+        super();
+        this.state = {
+            description: '',
+            amount: 0
+        };
+    }
+
+
+
+    // capture and update state when input changes
+    handleChangeDesc = (e) => {
+        let updatedDescription = this.state.description;
+        updatedDescription = e.target.value;
+        this.setState({description: updatedDescription});
+    }
+    handleChangeNum = (e) => {
+        let updatedAmount = this.state.amount;
+        updatedAmount = Number(e.target.value); 
+        this.setState({amount: updatedAmount});
+    }
+
+
+    // when user click Submit, set State to App.js debitList
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.addDebit(this.state.description, this.state.amount);
+    }
+
+
+
     // Render the list of Debit items and a form to input new Debit item
     render() { 
+
         return (
         <div>
             <h1>Debits</h1>
-  
-
-            <form onSubmit={this.props.addDebit}>
-            <input type="text" name="description"/>
-            <input type="number" name="amount" />
+            <br/>
+            {this.props.debits.map( (debit) => {
+                return (
+                    <div key={debit.id}>
+                        <h3>Description: {debit.description}</h3>
+                        <h3>Amount: ${Math.round((debit.amount + Number.EPSILON) * 100) / 100}</h3>
+                        <h3>Date: {debit.date.substring(0,10)}</h3>
+                        <p>---------------------------------</p>
+                    </div>
+                );
+            })};
+            <br/>
+            <form onSubmit={this.handleSubmit}>
+            <input type="text" name="description" onChange={this.handleChangeDesc}/>
+            <input type="number" step="0.01" name="amount" onChange={this.handleChangeNum}/>
             <button type="submit">Add Debit</button>
             </form>
             <br/>

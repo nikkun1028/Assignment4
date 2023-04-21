@@ -29,6 +29,7 @@ class App extends Component {
       }
     };
     this.componentDidMountCredits();
+    this.componentDidMountDebits();
   }    
   
   
@@ -48,6 +49,22 @@ class App extends Component {
             console.log(error.response.data);
             console.log(error.response.status);
         }
+    }
+  }
+
+  // API call to get debitList data
+  async componentDidMountDebits() {
+    let linkToAPI = "https://johnnylaicode.github.io/api/debits.json";
+
+    // check if API call success
+    try {
+      let response = await axios.get(linkToAPI);
+      this.setState({debitList: response.data});
+    }
+    catch (error) {
+      if(error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);      }
     }
   }
 
@@ -108,6 +125,26 @@ class App extends Component {
     this.updateBalance();
   }
 
+  // function to add a debit input into debitList array
+  // should update the account balance also
+  addDebit = (descInput, amountInput) => {
+    const newList = {...this.state.debitList};
+    const newDate = new Date();
+    const year = newDate.toLocaleString("en-GB", {year: "numeric"});
+    const month = newDate.toLocaleString("en-GB", {month: "2-digit"});
+    const day = newDate.toLocaleString("en-GB", {day: "2-digit"});
+    const debit = {
+      id: this.state.debitList.length + 1,
+      description: descInput,
+      amount: amountInput,
+      date: year + "-" + month + "-" + day
+    };
+
+    this.state.debitList.push(debit);
+    this.setState({debitList: this.state.debitList});
+    this.updateBalance();
+  }
+
 
 
 
@@ -135,11 +172,11 @@ class App extends Component {
     const CreditsComponent = () => (
       <Credits credits={this.state.creditList}
       addCredit={this.addCredit}
-      componentDidMountCredits={this.componentDidMountCredits}
       accountBalance={this.state.accountBalance}/>
     );
     const DebitsComponent = () => (
       <Debits debits={this.state.debitList}
+      addDebit={this.addDebit}
       accountBalance={this.state.accountBalance}/>
     );
 
