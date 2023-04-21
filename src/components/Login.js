@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 
 
+
 class LogIn extends Component {
     constructor () {
         super();
@@ -15,7 +16,7 @@ class LogIn extends Component {
         };
     }
 
-
+    // get input value in User Name and update state
     handleChange = (e) => {
         const updatedUser = {...this.state.user};
         updatedUser.userName = e.target.value;
@@ -31,7 +32,10 @@ class LogIn extends Component {
 
 
 
+    // rendering starts here
+    // call handleSubmit when Log In button is clicked
     render () {
+        // this is when Log In is clicked
         if (this.state.redirect) {
             return (<Redirect to="/userProfile"/>);
         }

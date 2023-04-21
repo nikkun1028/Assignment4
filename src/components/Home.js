@@ -3,7 +3,7 @@ import AccountBalance from './AccountBalance';
 import {Link} from 'react-router-dom';
 
 
-
+// Home Component provides access to all routes
 class Home extends Component {
     render() {
         return(
@@ -15,7 +15,9 @@ class Home extends Component {
                 <br/>
                 <Link to="/login">Login</Link>
                 <br/>
-
+                <Link to="/credits">Credits</Link>
+                <br/>
+                <Link to="/debits">Debits</Link>
                 <br/><br/>
                 <AccountBalance accountBalance={this.props.accountBalance}/>
 
