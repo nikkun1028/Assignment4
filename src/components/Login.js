@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router-dom';
 import {Link} from 'react-router-dom';
+import AccountBalance from './AccountBalance';
 
 
 
@@ -16,6 +17,7 @@ class LogIn extends Component {
         };
     }
 
+    
     // get input value in User Name and update state
     handleChange = (e) => {
         const updatedUser = {...this.state.user};
@@ -58,6 +60,8 @@ class LogIn extends Component {
                 </form>
                 <br/>
                 <Link to="/">Return to Home</Link>
+                <br/><br/>
+                <AccountBalance accountBalance={this.props.accountBalance}/>
             </div>
         );
     }

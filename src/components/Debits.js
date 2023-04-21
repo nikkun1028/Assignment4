@@ -8,8 +8,9 @@ This is Debits component
 
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import AccountBalance from './AccountBalance';
 
-
+/*
 
 const Debits = (props) => {
     // Create the list of Debit items
@@ -20,22 +21,29 @@ const Debits = (props) => {
         return <li key={debit.id}>{debit.amount} {debit.description} {date}</li>
       });
     }
+*/
+
+
+class Debits extends Component {
     // Render the list of Debit items and a form to input new Debit item
-    return (
-      <div>
-        <h1>Debits</h1>
+    render() { 
+        return (
+        <div>
+            <h1>Debits</h1>
   
-        {debitsView()}
-  
-        <form onSubmit={props.addDebit}>
-          <input type="text" name="description" />
-          <input type="number" name="amount" />
-          <button type="submit">Add Debit</button>
-        </form>
-        <br/>
-        <Link to="/">Return to Home</Link>
-      </div>
-    );
+
+            <form onSubmit={this.props.addDebit}>
+            <input type="text" name="description"/>
+            <input type="number" name="amount" />
+            <button type="submit">Add Debit</button>
+            </form>
+            <br/>
+            <Link to="/">Return to Home</Link>
+            <br/><br/>
+            <AccountBalance accountBalance={this.props.accountBalance}/>
+        </div>
+        );
+    }
 }
 
 
