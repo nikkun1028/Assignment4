@@ -6,6 +6,9 @@ import LogIn from './components/Login';
 import Credits from './components/Credits';
 import Debits from './components/Debits';
 
+import axios from 'axios'; // for HTTP requests (APIs)
+
+
 
 
 class App extends Component {
@@ -22,7 +25,32 @@ class App extends Component {
         memberSince: '11/22/99',
       }
     };
+    this.componentDidMountCredits();
+
+  }    
+  
+  
+
+  // API call to get creditList data
+  async componentDidMountCredits() {
+    let linkToAPI = "https://johnnylaicode.github.io/api/credits.json";
+
+    // check if API call success
+    try {
+        let response = await axios.get(linkToAPI);
+        this.setState({creditList: response.data});
+
+    }
+    catch (error) {
+        if(error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+        }
+    }
   }
+
+
+  
 
 
 
@@ -33,6 +61,16 @@ class App extends Component {
     newUser.userName = logInInfo.userName;
     this.setState({currentUser: newUser})
   }
+
+
+
+  // function to calculate total sum of Credits
+  // accumulate all amount value from API endpoint
+
+
+  // function to calculate total sum of Debits
+  // accumulate all amount value from API endpoint
+
 
 
 
@@ -48,16 +86,21 @@ class App extends Component {
     );
     const UserProfileComponent = () => (
       <UserProfile userName={this.state.currentUser.userName}
-      memberSince={this.state.currentUser.memberSince}/>
+      memberSince={this.state.currentUser.memberSince} 
+      accountBalance={this.state.accountBalance}/>
     );
     const LogInComponent = () => (
-      <LogIn user={this.state.currentUser} mockLogIn={this.mockLogIn}/>
+      <LogIn user={this.state.currentUser} 
+      mockLogIn={this.mockLogIn}
+      accountBalance={this.state.accountBalance}/>
     );
     const CreditsComponent = () => (
-      <Credits credits={this.state.creditList}/>
+      <Credits credits={this.state.creditList}
+      accountBalance={this.state.accountBalance}/>
     );
     const DebitsComponent = () => (
-      <Debits debits={this.state.debitList}/>
+      <Debits debits={this.state.debitList}
+      accountBalance={this.state.accountBalance}/>
     );
 
 
@@ -73,7 +116,9 @@ class App extends Component {
         </div>
       </Router>
     );
-  }
-}
+  } // render() end;
+
+
+} // class App end;
 
 export default App;

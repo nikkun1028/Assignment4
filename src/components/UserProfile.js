@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import AccountBalance from './AccountBalance';
 
 
 class UserProfile extends Component {
@@ -13,6 +14,8 @@ class UserProfile extends Component {
                 <div>Member Since: {this.props.memberSince}</div>
                 <br/>
                 <Link to="/">Return to Home</Link>
+                <br/><br/>
+                <AccountBalance accountBalance={this.props.accountBalance}/>
             </div>
         );
     }
