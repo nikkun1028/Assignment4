@@ -42,7 +42,7 @@ class App extends Component {
 
 
     return(
-      <Router basename="/bank-of-react">
+      <Router basename="/Assignment4">
         <div className = "App">
           <Route exact path="/" render={HomeComponent}/>
           <Route exact path="/userProfile" render={UserProfileComponent}/>
