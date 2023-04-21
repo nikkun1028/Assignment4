@@ -7,6 +7,7 @@ import Credits from './components/Credits';
 import Debits from './components/Debits';
 
 import axios from 'axios'; // for HTTP requests (APIs)
+import { castArray } from 'lodash';
 
 
 
@@ -20,13 +21,14 @@ class App extends Component {
       accountBalance: 1234567.89,
       creditList: [],
       debitList: [],
+      //totalCredits: 0,
+      //totalDebits: 0,
       currentUser: {
         userName: 'Rei Imai',
         memberSince: '11/22/99',
       }
     };
     this.componentDidMountCredits();
-
   }    
   
   
@@ -39,7 +41,7 @@ class App extends Component {
     try {
         let response = await axios.get(linkToAPI);
         this.setState({creditList: response.data});
-
+        //this.updateBalance();
     }
     catch (error) {
         if(error.response) {
@@ -50,6 +52,27 @@ class App extends Component {
   }
 
 
+
+
+  // function to update account balance
+  updateBalance = () => {
+      let newBalance = this.calcTotalCredits() - this.calcTotalDebits();
+      this.setState({accountBalance: newBalance})
+  }
+
+  // function to calculate and update total Credits
+  calcTotalCredits = () => {
+    let sum = 0;
+    for(let i = 0; i < this.state.creditList.length; i++){
+      sum += Number(this.state.creditList[i].amount);
+    }
+    return sum;
+  }  
+  // function to calculate total Debits
+  calcTotalDebits = () => {
+    let sum = 0;
+    return sum;
+  }
   
 
 
@@ -64,12 +87,27 @@ class App extends Component {
 
 
 
-  // function to calculate total sum of Credits
-  // accumulate all amount value from API endpoint
+  // function to add a credit input into creditList array
+  // should update the account balance also
+  addCredit = (descInput, amountInput) => {
+    const newList = {...this.state.creditList};
+    const newDate = new Date();
+    const year = newDate.toLocaleString("en-GB", {year: "numeric"});
+    const month = newDate.toLocaleString("en-GB", {month: "2-digit"});
+    const day = newDate.toLocaleString("en-GB", {day: "2-digit"});
+    const credit = {
+      id: this.state.creditList.length + 1,
+      description: descInput,
+      amount: amountInput,
+      date: year + "-" + month + "-" + day
+    };
 
+   
+    this.state.creditList.push(credit);
+    this.setState({creditList: this.state.creditList});
+    this.updateBalance();
+  }
 
-  // function to calculate total sum of Debits
-  // accumulate all amount value from API endpoint
 
 
 
@@ -96,6 +134,8 @@ class App extends Component {
     );
     const CreditsComponent = () => (
       <Credits credits={this.state.creditList}
+      addCredit={this.addCredit}
+      componentDidMountCredits={this.componentDidMountCredits}
       accountBalance={this.state.accountBalance}/>
     );
     const DebitsComponent = () => (

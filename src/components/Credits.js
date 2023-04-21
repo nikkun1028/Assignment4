@@ -16,8 +16,39 @@ import AccountBalance from './AccountBalance';
 
 class Credits extends Component {
 
+    constructor () {
+        super();
+        this.state = {
+            description: '',
+            amount: 0
+        };
+    }
+
+
+    // caputure and update the state when input changes
+    handleChangeDesc = (e) => {
+        let updatedDescription = this.state.description;
+        updatedDescription = e.target.value;
+        this.setState({description: updatedDescription});
+    }
+    handleChangeNum = (e) => {
+        let updatedAmount = this.state.amount;
+        updatedAmount = Number(e.target.value); 
+        this.setState({amount: updatedAmount});
+    }
+
+
+    // when user click Submit, set State to App.js creditList
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.addCredit(this.state.description, this.state.amount);
+    }
+
+
+    
     
     render () {
+        //this.props.componentDidMountCredits();
         return (
             <div>
                 <h1>Credits</h1>
@@ -33,10 +64,10 @@ class Credits extends Component {
                     );
                 })}
                 <br/>
-                <form onSubmit={this.props.addCredit}>
-                <input type="text" name="description" placeholder="description(text)"/>
-                <input type="number" name="amount" placeholder="amount(number)"/>
-                <button type="submit">Add Credit</button>
+                <form onSubmit={this.handleSubmit}>
+                <input type="text" name="description" placeholder="description(text)" onChange={this.handleChangeDesc}/>
+                <input type="number" step="0.01" name="amount" placeholder="amount(number)" onChange={this.handleChangeNum}/>
+                <button type="submit" >Add Credit</button>
                 </form>
                 <br/>
                 <Link to="/">Return to Home</Link>
