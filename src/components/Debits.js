@@ -76,8 +76,8 @@ class Debits extends Component {
             })};
             <br/>
             <form onSubmit={this.handleSubmit}>
-            <input type="text" name="description" onChange={this.handleChangeDesc}/>
-            <input type="number" step="0.01" name="amount" onChange={this.handleChangeNum}/>
+            <input type="text" name="description" placeholder="description(text)" onChange={this.handleChangeDesc}/>
+            <input type="number" step="0.01" name="amount" placeholder="amount(number)" onChange={this.handleChangeNum}/>
             <button type="submit">Add Debit</button>
             </form>
             <br/>
