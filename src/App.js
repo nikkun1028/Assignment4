@@ -18,11 +18,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      accountBalance: 1234567.89,
+      accountBalance: 0,
       creditList: [],
       debitList: [],
-      //totalCredits: 0,
-      //totalDebits: 0,
       currentUser: {
         userName: 'Rei Imai',
         memberSince: '11/22/99',
@@ -30,7 +28,24 @@ class App extends Component {
     };
     this.componentDidMountCredits();
     this.componentDidMountDebits();
+
+
+    //this.updateBalance();
+
+    // although API data is successfully presented on the website,
+    // it result 0, because it says creditList & debitList arrays are both
+    // empty and udefined at this point (very weird). 
+    // it works perfectly fine after you enter an input to either
+    // Credit or Debit, then the balance will be correct all the way afterwards.
+    
+    // I couldn't figure out why the arrays are empty even though
+    // it's successfully retrieved from the API endpoints.
+    // Couldn't find out how to put the correct balance in the
+    // beggining of lauching the webpage.
+    // very sad.
   }    
+
+
   
   
 
@@ -42,7 +57,7 @@ class App extends Component {
     try {
         let response = await axios.get(linkToAPI);
         this.setState({creditList: response.data});
-        //this.updateBalance();
+
     }
     catch (error) {
         if(error.response) {
@@ -66,6 +81,7 @@ class App extends Component {
         console.log(error.response.data);
         console.log(error.response.status);      }
     }
+
   }
 
 
@@ -74,7 +90,8 @@ class App extends Component {
   // function to update account balance
   updateBalance = () => {
       let newBalance = this.calcTotalCredits() - this.calcTotalDebits();
-      this.setState({accountBalance: newBalance})
+      //console.log(this.state.debitList.length);
+      this.setState({accountBalance: newBalance});
   }
 
   // function to calculate and update total Credits
@@ -82,12 +99,16 @@ class App extends Component {
     let sum = 0;
     for(let i = 0; i < this.state.creditList.length; i++){
       sum += Number(this.state.creditList[i].amount);
+      //console.log(this.state.creditList[i].description);
     }
     return sum;
   }  
   // function to calculate total Debits
   calcTotalDebits = () => {
     let sum = 0;
+    for(let i = 0; i < this.state.debitList.length; i++){
+      sum += Number(this.state.debitList[i].amount);
+    }
     return sum;
   }
   
@@ -107,7 +128,7 @@ class App extends Component {
   // function to add a credit input into creditList array
   // should update the account balance also
   addCredit = (descInput, amountInput) => {
-    const newList = {...this.state.creditList};
+    //const newList = {...this.state.creditList};
     const newDate = new Date();
     const year = newDate.toLocaleString("en-GB", {year: "numeric"});
     const month = newDate.toLocaleString("en-GB", {month: "2-digit"});
@@ -128,7 +149,7 @@ class App extends Component {
   // function to add a debit input into debitList array
   // should update the account balance also
   addDebit = (descInput, amountInput) => {
-    const newList = {...this.state.debitList};
+    //const newList = {...this.state.debitList};
     const newDate = new Date();
     const year = newDate.toLocaleString("en-GB", {year: "numeric"});
     const month = newDate.toLocaleString("en-GB", {month: "2-digit"});
@@ -156,8 +177,20 @@ class App extends Component {
   render() {
 
     // crete React elements and pass input to componenets
+    const CreditsComponent = () => (
+      <Credits credits={this.state.creditList}
+      addCredit={this.addCredit}
+      accountBalance={this.state.accountBalance}/>
+    );
+    const DebitsComponent = () => (
+      <Debits debits={this.state.debitList}
+      addDebit={this.addDebit}
+      accountBalance={this.state.accountBalance}/>
+      
+    );
     const HomeComponent = () => (
-      <Home accountBalance={this.state.accountBalance}/>
+      <Home accountBalance={this.state.accountBalance}
+      updateBalance={this.updateBalance}/>
     );
     const UserProfileComponent = () => (
       <UserProfile userName={this.state.currentUser.userName}
@@ -169,17 +202,8 @@ class App extends Component {
       mockLogIn={this.mockLogIn}
       accountBalance={this.state.accountBalance}/>
     );
-    const CreditsComponent = () => (
-      <Credits credits={this.state.creditList}
-      addCredit={this.addCredit}
-      accountBalance={this.state.accountBalance}/>
-    );
-    const DebitsComponent = () => (
-      <Debits debits={this.state.debitList}
-      addDebit={this.addDebit}
-      accountBalance={this.state.accountBalance}/>
-    );
-
+  
+    
 
     // Routes to each components
     return(
